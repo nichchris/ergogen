@@ -18,20 +18,18 @@ module.exports = {
     to: undefined
   },
   params: {
-      class: 'S',
-      hotswap: false,
-      reverse: false,
-      keycaps: false
+    class: 'S',
+    hotswap: false,
+    reverse: false,
+    keycaps: false
   },
   body: p => {
     const standard = `
       (module MX (layer F.Cu) (tedit 5DD4F656)
       ${p.at /* parametric position */}
-
       ${'' /* footprint reference */}
       (fp_text reference "${p.ref}" (at 0 0) (layer F.SilkS) ${p.ref_hide} (effects (font (size 1.27 1.27) (thickness 0.15))))
       (fp_text value "" (at 0 0) (layer F.SilkS) hide (effects (font (size 1.27 1.27) (thickness 0.15))))
-
       ${''/* corner marks */}
       (fp_line (start -7 -6) (end -7 -7) (layer Dwgs.User) (width 0.15))
       (fp_line (start -7 7) (end -6 7) (layer Dwgs.User) (width 0.15))
@@ -44,7 +42,6 @@ module.exports = {
     
       ${''/* middle shaft */}
       (pad "" np_thru_hole circle (at 0 0) (size 3.9878 3.9878) (drill 3.9878) (layers *.Cu *.Mask))
-
       ${''/* stabilizers */}
       (pad "" np_thru_hole circle (at 5.08 0) (size 1.7018 1.7018) (drill 1.7018) (layers *.Cu *.Mask))
       (pad "" np_thru_hole circle (at -5.08 0) (size 1.7018 1.7018) (drill 1.7018) (layers *.Cu *.Mask))
@@ -57,25 +54,25 @@ module.exports = {
       (fp_line (start -9.5 9.5) (end -9.5 -9.5) (layer Dwgs.User) (width 0.15))
       `
     function pins(def_neg, def_pos, def_side) {
-      if(p.param.hotswap) {
+      if (p.param.hotswap) {
         return `
         ${'' /* holes */}
         (pad "" np_thru_hole circle (at ${def_pos}2.54 -5.08) (size 3 3) (drill 3) (layers *.Cu *.Mask))
         (pad "" np_thru_hole circle (at ${def_neg}3.81 -2.54) (size 3 3) (drill 3) (layers *.Cu *.Mask))
         
         ${'' /* net pads */}
-        (pad 1 smd rect (at ${def_neg}7.085 -2.54 180) (size 2.55 2.5) (layers ${def_side}.Cu ${def_side}.Paste ${def_side}.Mask) ${p.net.from.str})
-        (pad 2 smd rect (at ${def_pos}5.842 -5.08 180) (size 2.55 2.5) (layers ${def_side}.Cu ${def_side}.Paste ${def_side}.Mask) ${p.net.to.str})
+        (pad 1 smd rect (at ${def_neg}7.085 -2.54 ${p.rot + 180}) (size 2.55 2.5) (layers ${def_side}.Cu ${def_side}.Paste ${def_side}.Mask) ${p.net.from.str})
+        (pad 2 smd rect (at ${def_pos}5.842 -5.08 ${p.rot + 180}) (size 2.55 2.5) (layers ${def_side}.Cu ${def_side}.Paste ${def_side}.Mask) ${p.net.to.str})
         `
       } else {
-          return `
+        return `
             ${''/* pins */}
             (pad 1 thru_hole circle (at ${def_pos}2.54 -5.08) (size 2.286 2.286) (drill 1.4986) (layers *.Cu *.Mask) ${p.net.from.str})
             (pad 2 thru_hole circle (at ${def_neg}3.81 -2.54) (size 2.286 2.286) (drill 1.4986) (layers *.Cu *.Mask) ${p.net.to.str})
           `
       }
     }
-    if(p.param.reverse){
+    if (p.param.reverse) {
       return `
         ${standard}
         ${p.param.keycaps ? keycap : ''}
